@@ -1,5 +1,8 @@
 FROM ubuntu:22.04
 
+# Set the working directory
+WORKDIR /tmp/riscv-gnu-toolchain
+
 # Set environment variables to non-interactive for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -34,19 +37,11 @@ RUN apt-get update  \
     && apt-get autoclean            \
     && apt-get clean                \
     && apt-get autoremove -y        \
-    && rm -r /var/lib/apt/lists/*
+    && rm -r /var/lib/apt/lists/*   \
+    && git clone --single-branch --branch=master --depth=1 https://github.com/riscv/riscv-gnu-toolchain /tmp/riscv-gnu-toolchain
 
-# Clone the RISC-V GNU toolchain repository
-RUN git clone https://github.com/riscv/riscv-gnu-toolchain /opt/riscv-gnu-toolchain
-
-# Set the working directory
-WORKDIR /opt/riscv-gnu-toolchain
-
-# Add the build script
-COPY build.sh /opt/build.sh
-
-# Make the script executable
-RUN chmod +x /opt/build.sh
+COPY build.sh /tmp/build.sh
+RUN chmod +x /tmp/build.sh
 
 # Run the build script
-ENTRYPOINT ["/opt/build.sh"]
+ENTRYPOINT ["/tmp/build.sh"]
