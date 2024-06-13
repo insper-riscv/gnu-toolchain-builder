@@ -41,11 +41,23 @@ configuration. The output will be a `.tar.gz` file saved in the current
 directory.
 
 ```sh
-docker run --rm -v "${PWD}:/output" riscv-gnu-toolchain-builder --with-arch=rv32i --with-abi=ilp32 --disable-linux
+docker run --rm -v "${PWD}:/~" -v "riscv-gnu-toolchain:/tmp" riscv-gnu-toolchain-builder [CONFIGURE_OPTIONS]
 ```
 
-Adjust the external parameters
-(`--with-arch=rv32i --with-abi=ilp32 --disable-linux`) as needed.
+#### Example
+
+```sh
+docker run --rm -v "${PWD}:/~" -v "riscv-gnu-toolchain:/tmp" riscv-gnu-toolchain-builder --with-arch=rv32i --with-abi=ilp32 --disable-linux --with-newlib
+```
+
+1. `--with-arch=rv32i`: Specifies the RISC-V architecture. RV32I is a common
+   minimal architecture for 32-bit processors.
+2. `--with-abi=ilp32`: Specifies the ABI (Application Binary Interface). ILP32
+   is typically used with RV32I.
+3. `--disable-linux`: Disables the building of Linux-specific components,
+   focusing on bare-metal support.
+4. `--with-newlib`: Includes the newlib C library, which is lightweight and
+   suitable for bare-metal environments.
 
 ## License
 
